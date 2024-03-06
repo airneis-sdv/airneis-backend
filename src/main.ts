@@ -7,6 +7,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
 
+  app.setGlobalPrefix("api");
+
   // Setup Swagger in development mode
   if (process.env.NODE_ENV == "development") {
     const config = new DocumentBuilder()
