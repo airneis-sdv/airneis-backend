@@ -1,6 +1,8 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { DatabaseModule } from "./config/database.module";
+import { ResponseExceptionFilter } from "./common/filters/error.filter";
+import { APP_FILTER } from "@nestjs/core";
 
 @Module({
   imports: [
@@ -8,6 +10,11 @@ import { DatabaseModule } from "./config/database.module";
     DatabaseModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: ResponseExceptionFilter,
+    }
+  ],
 })
 export class AppModule { }
