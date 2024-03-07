@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, UseInterceptors, ClassSerializerInterceptor, Query } from "@nestjs/common";
-import { UsersService } from "./users.service";
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UseInterceptors } from "@nestjs/common";
+import { ApiQuery } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
-import { ApiQuery } from "@nestjs/swagger";
+import { UsersService } from "./users.service";
 
 // Prevents fields with @Exclude() from being returned in the response
 @UseInterceptors(ClassSerializerInterceptor)
