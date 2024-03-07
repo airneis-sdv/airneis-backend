@@ -4,29 +4,29 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    public id: number;
+  @PrimaryGeneratedColumn()
+  public id: number;
 
-    @Column()
-    public name: string;
+  @Column()
+  public name: string;
 
-    @Column()
-    public email: string;
+  @Column()
+  public email: string;
 
-    @Column()
-    @Exclude()
-    public password: string;
+  @Column()
+  @Exclude()
+  public password: string;
 
-    @Column({
-        type: "enum",
-        enum: Role,
-        default: Role.USER,
-    })
-    public role: Role;
+  @Column({
+    type: "enum",
+    enum: Role,
+    default: Role.USER,
+  })
+  public role: Role;
 
-    @CreateDateColumn()
-    public created_at: Date;
+  @CreateDateColumn()
+  public created_at: Date;
 
-    @UpdateDateColumn()
-    public updated_at: Date;
+  @UpdateDateColumn()
+  public updated_at: Date;
 }
