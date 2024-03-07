@@ -1,8 +1,11 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from "@nestjs/common";
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger } from "@nestjs/common";
 import { Response } from "express";
+import { EntityPropertyNotFoundError } from "typeorm";
 
 @Catch(Error)
 export class ResponseExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(ResponseExceptionFilter.name);
+
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -23,6 +26,12 @@ export class ResponseExceptionFilter implements ExceptionFilter {
       } else {
         responseData.message = JSON.stringify(exceptionResponse);
       }
+    } else if (exception instanceof EntityPropertyNotFoundError) {
+      responseData.statusCode = 400;
+      responseData.message = "Bad request";
+    } else {
+      this.logger.error(`Exception occured while processing request in route: ${ctx.getRequest().url}`);
+      this.logger.error(exception.stack ?? exception.message);
     }
 
     response.status(responseData.statusCode).json(responseData);
