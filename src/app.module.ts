@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { DatabaseModule } from "./config/database.module";
+import { UserModule } from "./user/user.module";
 import { ResponseExceptionFilter } from "./common/filters/response-exception.filter";
 import { APP_FILTER } from "@nestjs/core";
 
@@ -8,6 +9,7 @@ import { APP_FILTER } from "@nestjs/core";
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
+    UserModule,
   ],
   controllers: [],
   providers: [
