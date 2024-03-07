@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { DatabaseModule } from "./config/database.module";
-import { ResponseExceptionFilter } from "./common/filters/error.filter";
+import { ResponseExceptionFilter } from "./common/filters/response-exception.filter";
 import { APP_FILTER } from "@nestjs/core";
 
 @Module({
