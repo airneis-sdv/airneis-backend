@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UseInterceptors } from "@nestjs/common";
+import { Body, ClassSerializerInterceptor, ConflictException, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UseInterceptors } from "@nestjs/common";
 import { ApiQuery } from "@nestjs/swagger";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
@@ -11,6 +11,10 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) { }
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
+    const userByEmail = await this.usersService.findOneByEmail(createUserDto.email);
+    if (userByEmail) throw new ConflictException(`Email ${createUserDto.email} is already in use`);
+
+
     const user = await this.usersService.create(createUserDto);
     return { success: true, user };
   }
