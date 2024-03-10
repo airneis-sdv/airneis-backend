@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { Like, Repository } from "typeorm";
@@ -11,6 +11,9 @@ export class UsersService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>) { }
 
   async create(createUserDto: CreateUserDto) {
+    const userByEmail = await this.findOneByEmail(createUserDto.email);
+    if (userByEmail) throw new ConflictException(`Email ${createUserDto.email} is already in use`);
+
     createUserDto.password = await bcrypt.hash(createUserDto.password, 10);
 
     const user = this.userRepository.create(createUserDto);
@@ -30,19 +33,28 @@ export class UsersService {
     });
   }
 
-  findOne(id: number) {
-    return this.userRepository.findOne({ where: { id } });
+  async findOne(id: number) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+
+    return user;
   }
 
   findOneByEmail(email: string) {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.userRepository.update(id, updateUserDto);
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const result = await this.userRepository.update(id, updateUserDto);
+
+    if (result.affected !== 1)
+      throw new NotFoundException(`User with id ${id} not found`);
   }
 
-  remove(id: number) {
-    return this.userRepository.delete(id);
+  async remove(id: number) {
+    const result = await this.userRepository.delete(id);
+
+    if (result.affected !== 1)
+      throw new NotFoundException(`User with id ${id} not found`);
   }
 }
