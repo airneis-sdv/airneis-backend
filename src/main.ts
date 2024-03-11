@@ -17,7 +17,7 @@ async function bootstrap() {
       .setVersion("1.0")
       .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup("api/swagger", app, document);
+    SwaggerModule.setup("api/swagger", app, document, { swaggerOptions: { tagsSorter: "alpha" } });
   }
 
   await app.listen(3000);
