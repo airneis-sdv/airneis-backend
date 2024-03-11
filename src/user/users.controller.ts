@@ -1,7 +1,7 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from "@nestjs/common";
 import { ApiCookieAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
-import { Authorize } from "src/auth/decorators/authorize.decorator";
-import { Role } from "src/auth/enums/role.enum";
+import { Authorize } from "../auth/decorators/authorize.decorator";
+import { Role } from "../auth/enums/role.enum";
 import { CreateUserAddressDto } from "./dto/create-user-address.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UpdateUserAddressDto } from "./dto/update-user-address.dto";

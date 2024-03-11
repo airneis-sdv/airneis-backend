@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
-import { Role } from "src/auth/enums/role.enum";
+import { Role } from "../auth/enums/role.enum";
 import { UsersService } from "../user/users.service";
 import { AuthLoginDto } from "./dto/auth-login.dto";
 import { AuthRegisterDto } from "./dto/auth-register.dto";
