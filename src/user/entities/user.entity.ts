@@ -1,6 +1,7 @@
 import { Exclude } from "class-transformer";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Role } from "../../auth/enums/role.enum";
+import { UserAddress } from "./user-address.entity";
 
 @Entity()
 export class User {
@@ -23,6 +24,9 @@ export class User {
     default: Role.USER,
   })
   public role: Role;
+
+  @OneToMany(() => UserAddress, (address) => address.user, { cascade: true })
+  public addresses: UserAddress[];
 
   @CreateDateColumn()
   public createdAt: Date;

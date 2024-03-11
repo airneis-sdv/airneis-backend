@@ -2,7 +2,9 @@ import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch
 import { ApiCookieAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { Authorize } from "src/auth/decorators/authorize.decorator";
 import { Role } from "src/auth/enums/role.enum";
+import { CreateUserAddressDto } from "./dto/create-user-address.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { UpdateUserAddressDto } from "./dto/update-user-address.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
 
@@ -56,6 +58,48 @@ export class UsersController {
   @ApiCookieAuth()
   async remove(@Param("id") id: string) {
     await this.usersService.remove(+id);
+    return { success: true };
+  }
+
+  @Post(":userId/addresses")
+  @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
+  async createAddress(@Param("userId") userId: string, @Body() createAddressDto: CreateUserAddressDto) {
+    const address = await this.usersService.createAddress(+userId, createAddressDto);
+    return { success: true, address };
+  }
+
+  @Get(":userId/addresses")
+  @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
+  async findAllAddresses(@Param("userId") userId: string) {
+    const addresses = await this.usersService.findAllAddresses(+userId);
+    return { success: true, addresses };
+  }
+
+  @Get(":userId/addresses/:addressId")
+  @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
+  async findOneAddress(@Param("userId") userId: string, @Param("addressId") addressId: string) {
+    const address = await this.usersService.findOneAddress(+userId, +addressId);
+    return { success: true, address };
+  }
+
+  @Patch(":userId/addresses/:addressId")
+  @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
+  async updateAddress(@Param("userId") userId: string, @Param("addressId") addressId: string, @Body() updateAddressDto: UpdateUserAddressDto) {
+    await this.usersService.updateAddress(+userId, +addressId, updateAddressDto);
+
+    const address = await this.usersService.findOneAddress(+userId, +addressId);
+    return { success: true, address };
+  }
+
+  @Delete(":userId/addresses/:addressId")
+  @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
+  async removeAddress(@Param("userId") userId: string, @Param("addressId") addressId: string) {
+    await this.usersService.removeAddress(+userId, +addressId);
     return { success: true };
   }
 }
