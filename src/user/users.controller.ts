@@ -1,5 +1,5 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from "@nestjs/common";
-import { ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiCookieAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { Authorize } from "src/auth/decorators/authorize.decorator";
 import { Role } from "src/auth/enums/role.enum";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -15,6 +15,7 @@ export class UsersController {
 
   @Post()
   @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
   async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
     return { success: true, user };
@@ -22,6 +23,7 @@ export class UsersController {
 
   @Get()
   @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
   @ApiQuery({ name: "search", required: false })
   async findAll(@Query() query: { search?: string }) {
     const users = query.search
@@ -33,6 +35,7 @@ export class UsersController {
 
   @Get(":id")
   @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
   async findOne(@Param("id") id: string) {
     const user = await this.usersService.findOne(+id);
     return { success: true, user };
@@ -40,6 +43,7 @@ export class UsersController {
 
   @Patch(":id")
   @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
   async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
     await this.usersService.update(+id, updateUserDto);
 
@@ -49,6 +53,7 @@ export class UsersController {
 
   @Delete(":id")
   @Authorize(Role.ADMIN)
+  @ApiCookieAuth()
   async remove(@Param("id") id: string) {
     await this.usersService.remove(+id);
     return { success: true };
