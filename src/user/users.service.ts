@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { Like, Repository } from "typeorm";
@@ -25,6 +25,9 @@ export class UsersService {
   }
 
   findAllBySearch(search: string) {
+    if (search.length < 3)
+      throw new BadRequestException("Search query must be at least 3 characters long");
+
     return this.userRepository.find({
       where: [
         { name: Like(`%${search}%`) },
