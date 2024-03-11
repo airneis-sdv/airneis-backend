@@ -25,8 +25,8 @@ export class User {
   public role: Role;
 
   @CreateDateColumn()
-  public created_at: Date;
+  public createdAt: Date;
 
   @UpdateDateColumn()
-  public updated_at: Date;
+  public updatedAt: Date;
 }
