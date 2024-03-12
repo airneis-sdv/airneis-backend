@@ -1,9 +1,10 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { Like, Repository } from "typeorm";
 import { CreateUserAddressDto } from "./dto/create-user-address.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { PasswordUpdateDto } from "./dto/password-update.dto";
 import { UpdateUserAddressDto } from "./dto/update-user-address.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserAddress } from "./entities/user-address.entity";
@@ -56,6 +57,23 @@ export class UsersService {
 
     if (result.affected !== 1)
       throw new NotFoundException(`User with id ${id} not found`);
+  }
+
+  async updatePassword(id: number, passwordUpdateDto: PasswordUpdateDto) {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+
+    const isOldPasswordCorrect = await bcrypt.compare(passwordUpdateDto.oldPassword, user.password);
+    if (!isOldPasswordCorrect) throw new UnauthorizedException("Old password is incorrect");
+
+    if (passwordUpdateDto.oldPassword === passwordUpdateDto.newPassword)
+      throw new BadRequestException("New password must be different from the old password");
+
+    const newPassword = await bcrypt.hash(passwordUpdateDto.newPassword, 10);
+    const result = await this.userRepository.update(id, { password: newPassword });
+
+    if (result.affected !== 1)
+      throw new InternalServerErrorException(`Failed to update password for user with id ${id}`);
   }
 
   async remove(id: number) {
