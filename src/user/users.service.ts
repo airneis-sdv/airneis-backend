@@ -41,9 +41,9 @@ export class UsersService {
     });
   }
 
-  async findOne(id: number) {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+  async findOne(userId: number) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException(`User with id ${userId} not found`);
 
     return user;
   }
@@ -52,16 +52,16 @@ export class UsersService {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    const result = await this.userRepository.update(id, updateUserDto);
+  async update(userId: number, updateUserDto: UpdateUserDto) {
+    const result = await this.userRepository.update(userId, updateUserDto);
 
     if (result.affected !== 1)
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new NotFoundException(`User with id ${userId} not found`);
   }
 
-  async updatePassword(id: number, passwordUpdateDto: PasswordUpdateDto) {
-    const user = await this.userRepository.findOne({ where: { id } });
-    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+  async updatePassword(userId: number, passwordUpdateDto: PasswordUpdateDto) {
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    if (!user) throw new NotFoundException(`User with id ${userId} not found`);
 
     const isOldPasswordCorrect = await bcrypt.compare(passwordUpdateDto.oldPassword, user.password);
     if (!isOldPasswordCorrect) throw new UnauthorizedException("Old password is incorrect");
@@ -70,22 +70,22 @@ export class UsersService {
       throw new BadRequestException("New password must be different from the old password");
 
     const newPassword = await bcrypt.hash(passwordUpdateDto.newPassword, 10);
-    const result = await this.userRepository.update(id, { password: newPassword });
+    const result = await this.userRepository.update(userId, { password: newPassword });
 
     if (result.affected !== 1)
-      throw new InternalServerErrorException(`Failed to update password for user with id ${id}`);
+      throw new InternalServerErrorException(`Failed to update password for user with id ${userId}`);
   }
 
-  async remove(id: number) {
-    const result = await this.userRepository.delete(id);
+  async remove(userId: number) {
+    const result = await this.userRepository.delete(userId);
 
     if (result.affected !== 1)
-      throw new NotFoundException(`User with id ${id} not found`);
+      throw new NotFoundException(`User with id ${userId} not found`);
   }
 
-  async createAddress(id: number, createAddressDto: CreateUserAddressDto) {
-    const user = await this.userRepository.findOne({ where: { id }, relations: { addresses: true } });
-    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+  async createAddress(userId: number, createAddressDto: CreateUserAddressDto) {
+    const user = await this.userRepository.findOne({ where: { id: userId }, relations: { addresses: true } });
+    if (!user) throw new NotFoundException(`User with id ${userId} not found`);
 
     const address = this.addressRepository.create(createAddressDto);
     user.addresses.push(address);
@@ -93,9 +93,9 @@ export class UsersService {
     await this.userRepository.save(user);
   }
 
-  async findAllAddresses(id: number) {
-    const user = await this.userRepository.findOne({ where: { id }, relations: { addresses: true } });
-    if (!user) throw new NotFoundException(`User with id ${id} not found`);
+  async findAllAddresses(userId: number) {
+    const user = await this.userRepository.findOne({ where: { id: userId }, relations: { addresses: true } });
+    if (!user) throw new NotFoundException(`User with id ${userId} not found`);
 
     return user.addresses;
   }
