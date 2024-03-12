@@ -6,50 +6,50 @@ export class UpdateUserAddressDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public firstName: string;
+  public firstName?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public lastName: string;
+  public lastName?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public address1: string;
+  public address1?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public address2: string;
+  public address2?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public city: string;
+  public city?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public region: string;
+  public region?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public postalCode: string;
+  public postalCode?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public country: string;
+  public country?: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public phone: string;
+  public phone?: string;
 
   @ApiProperty({ enum: AddressType })
   @IsOptional()
   @IsEnum(AddressType)
-  public type: AddressType;
+  public type?: AddressType;
 }

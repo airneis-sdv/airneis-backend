@@ -21,7 +21,7 @@ export class CreateUserAddressDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  public address2: string;
+  public address2?: string;
 
   @ApiProperty()
   @IsString()
