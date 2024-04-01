@@ -4,6 +4,7 @@ import { APP_FILTER } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module";
 import { ResponseExceptionFilter } from "./common/filters/response-exception.filter";
 import { DatabaseModule } from "./config/database.module";
+import { MaterialModule } from "./material/material.module";
 import { MediaModule } from "./media/media.module";
 import { UserModule } from "./user/user.module";
 
@@ -14,6 +15,7 @@ import { UserModule } from "./user/user.module";
     UserModule,
     AuthModule,
     MediaModule,
+    MaterialModule,
   ],
   controllers: [],
   providers: [
