@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { AddressType } from "../enums/address-type.enum";
 import { User } from "./user.entity";
 
@@ -36,6 +36,12 @@ export class UserAddress {
 
   @Column({ type: "enum", enum: AddressType })
   public type: AddressType;
+
+  @CreateDateColumn()
+  public createdAt: Date;
+
+  @UpdateDateColumn()
+  public updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.addresses, { onDelete: "CASCADE" })
   public user: User;
