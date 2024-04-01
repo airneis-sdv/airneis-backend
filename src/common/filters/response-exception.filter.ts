@@ -30,7 +30,8 @@ export class ResponseExceptionFilter implements ExceptionFilter {
       responseData.statusCode = 400;
       responseData.message = "Bad request";
     } else {
-      this.logger.error(`Exception occured while processing request in route: ${ctx.getRequest().url}`);
+      const request = ctx.getRequest();
+      this.logger.error(`Exception occured while processing request in route: ${request.method} ${request.url}`);
       this.logger.error(exception.stack ?? exception.message);
     }
 
