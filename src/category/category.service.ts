@@ -11,8 +11,16 @@ export class CategoryService {
   constructor(@InjectRepository(Category) private categoryRepository: Repository<Category>,
     private readonly mediaService: MediaService) { }
 
-  create(categoryDto: CreateCategoryDto) {
-    const category = this.categoryRepository.create(categoryDto);
+  async create(createCategoryDto: CreateCategoryDto) {
+    const category = this.categoryRepository.create(createCategoryDto);
+
+    if (createCategoryDto.thumbnailId !== undefined) {
+      const thumbnail = createCategoryDto.thumbnailId === null ? null : await this.mediaService.findOne(createCategoryDto.thumbnailId);
+
+      delete createCategoryDto.thumbnailId;
+      category.thumbnail = thumbnail;
+    }
+
     return this.categoryRepository.save(category);
   }
 
