@@ -75,7 +75,7 @@ export class AuthService {
     if (tokens.accessToken)
       response.cookie("access_token", tokens.accessToken, {
         httpOnly: true,
-        maxAge: 3600 * 24 * 7,
+        maxAge: 1000 * 3600 * 24 * 7,
         secure: !this.isDevelopment,
         sameSite: "lax",
       });
@@ -84,7 +84,7 @@ export class AuthService {
       response.cookie("refresh_token", tokens.refreshToken, {
         path: "/api/auth/refresh",
         httpOnly: true,
-        maxAge: 3600 * 24 * 7,
+        maxAge: 1000 * 3600 * 24 * 7,
         secure: !this.isDevelopment,
         sameSite: "strict",
       });
