@@ -37,7 +37,6 @@ export class CategoryService {
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     const category = await this.categoryRepository.findOne({ where: { id }, relations: { thumbnail: true } });
-    if (!category) throw new NotFoundException(`Category with id ${id} not found`);
 
     if (updateCategoryDto.thumbnailId !== undefined) {
       const thumbnail = updateCategoryDto.thumbnailId === null ? null : await this.mediaService.findOne(updateCategoryDto.thumbnailId);
@@ -49,7 +48,7 @@ export class CategoryService {
     const result = await this.categoryRepository.update(id, { ...updateCategoryDto, thumbnail: category.thumbnail });
 
     if (result.affected !== 1)
-      throw new NotFoundException(`Failed to update category with id ${id}`);
+      throw new NotFoundException(`Category with id ${id} not found`);
   }
 
   async remove(id: number) {
