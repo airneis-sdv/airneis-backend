@@ -8,6 +8,7 @@ import { DatabaseModule } from "./config/database.module";
 import { MaterialModule } from "./material/material.module";
 import { MediaModule } from "./media/media.module";
 import { UserModule } from "./user/user.module";
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserModule } from "./user/user.module";
     MediaModule,
     MaterialModule,
     CategoryModule,
+    ProductModule,
   ],
   controllers: [],
   providers: [

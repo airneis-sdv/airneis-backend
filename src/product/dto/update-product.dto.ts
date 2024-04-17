@@ -1,0 +1,70 @@
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from "class-validator";
+
+export class UpdateProductDto {
+  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  public name?: string;
+
+  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  public description?: string;
+
+  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  public slug?: string;
+
+  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @IsNotEmpty()
+  @IsOptional()
+  public price?: number;
+
+  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsInt()
+  @IsNotEmpty()
+  @IsOptional()
+  public stock?: number;
+
+  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsInt()
+  @IsNotEmpty()
+  @IsOptional()
+  public priority?: number;
+
+  @ApiProperty()
+  @IsInt()
+  @IsNotEmpty()
+  @IsOptional()
+  public categoryId?: number;
+
+  @ApiProperty()
+  @IsInt({ each: true })
+  @IsNotEmpty()
+  @IsOptional()
+  public materialIds?: number[];
+
+  @ApiProperty()
+  @IsInt({ each: true })
+  @IsNotEmpty()
+  @IsOptional()
+  public imageIds?: number[];
+
+  @ApiProperty()
+  @IsInt()
+  @IsNotEmpty()
+  @IsOptional()
+  public backgroundImageId?: number;
+}

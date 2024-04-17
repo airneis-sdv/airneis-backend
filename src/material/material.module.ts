@@ -8,5 +8,6 @@ import { MaterialService } from "./material.service";
   imports: [TypeOrmModule.forFeature([Material])],
   controllers: [MaterialController],
   providers: [MaterialService],
+  exports: [MaterialService],
 })
 export class MaterialModule { }
