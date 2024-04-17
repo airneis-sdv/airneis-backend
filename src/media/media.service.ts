@@ -52,7 +52,7 @@ export class MediaService {
       throw new BadRequestException("Page is out of bounds, max page is " + totalPages);
 
     const result = await this.mediaRepository.find({ where, take: filters.limit, skip: filters.page ? filters.limit * (filters.page - 1) : 0 });
-    return { medias: result, limit: filters.limit, page: filters.page, total: totalPages };
+    return { medias: result, limit: filters.limit, page: filters.page ?? 1, total: totalPages };
   }
 
   async findOne(id: number) {
