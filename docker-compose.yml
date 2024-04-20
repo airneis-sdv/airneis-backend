@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: production
+    volumes:
+      - .:/usr/src/app
+    env_file:
+    - .env
+    # command: npm run start:dev
+    ports:
+      - 127.0.0.1:4200:3000
+    depends_on:
+      - database
+
+  database:
+    image: mariadb:10.4
+    restart: always
+    environment:
+      MYSQL_DATABASE: airneis
+      MYSQL_USER: airneis
+      MYSQL_PASSWORD: airneis_internal
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - ./data:/var/lib/mysql
