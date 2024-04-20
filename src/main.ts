@@ -13,7 +13,10 @@ async function bootstrap() {
       enableImplicitConversion: true
     }
   }));
+
+  app.enableCors({ origin: process.env.CORS_ORIGIN });
   app.use(cookieParser());
+
   app.setGlobalPrefix("api", { exclude: ["medias/serve/:hash"] });
 
   // Setup Swagger in development mode
