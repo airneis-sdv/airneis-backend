@@ -19,8 +19,6 @@ export class MaterialController {
   }
 
   @Get()
-  @Authorize(Role.ADMIN)
-  @ApiCookieAuth()
   async findAll() {
     const materials = await this.materialService.findAll();
     return { success: true, materials };

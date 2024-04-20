@@ -20,8 +20,6 @@ export class CategoryController {
   }
 
   @Get()
-  @Authorize(Role.ADMIN)
-  @ApiCookieAuth()
   async findAll() {
     const categories = await this.categoryService.findAll();
     return { success: true, categories };
