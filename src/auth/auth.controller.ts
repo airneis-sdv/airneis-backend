@@ -1,9 +1,10 @@
 import { Body, Controller, Post, Req, Res } from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
 import { Request, Response } from "express";
 import { AuthService } from "./auth.service";
 import { AuthLoginDto } from "./dto/auth-login.dto";
+import { AuthRefreshDto } from "./dto/auth-refresh.dto";
 import { AuthRegisterDto } from "./dto/auth-register.dto";
-import { ApiTags } from "@nestjs/swagger";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -12,14 +13,14 @@ export class AuthController {
 
   @Post("login")
   async login(@Body() authLoginDto: AuthLoginDto, @Res({ passthrough: true }) response: Response) {
-    await this.authService.validateCredentials(response, authLoginDto);
-    return { success: true };
+    const tokens = await this.authService.validateCredentials(response, authLoginDto);
+    return { success: true, tokens };
   }
 
   @Post("register")
   async register(@Body() authRegisterDto: AuthRegisterDto, @Res({ passthrough: true }) response: Response) {
-    await this.authService.register(response, authRegisterDto);
-    return { success: true };
+    const tokens = await this.authService.register(response, authRegisterDto);
+    return { success: true, tokens };
   }
 
   @Post("logout")
@@ -29,8 +30,8 @@ export class AuthController {
   }
 
   @Post("refresh")
-  async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response) {
-    await this.authService.refresh(request, response);
-    return { success: true };
+  async refresh(@Req() request: Request, @Res({ passthrough: true }) response: Response, @Body() authRefreshDto: AuthRefreshDto) {
+    const tokens = await this.authService.refresh(request, response, authRefreshDto);
+    return { success: true, tokens };
   }
 }

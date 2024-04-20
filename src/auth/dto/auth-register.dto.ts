@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsBoolean, IsEmail, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class AuthRegisterDto {
   @ApiProperty()
@@ -15,4 +15,9 @@ export class AuthRegisterDto {
   @IsString()
   @IsNotEmpty()
   public password: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsOptional()
+  public cookies?: boolean;
 }

@@ -6,6 +6,7 @@ import * as jwt from "jsonwebtoken";
 import { Role } from "../auth/enums/role.enum";
 import { UsersService } from "../user/users.service";
 import { AuthLoginDto } from "./dto/auth-login.dto";
+import { AuthRefreshDto } from "./dto/auth-refresh.dto";
 import { AuthRegisterDto } from "./dto/auth-register.dto";
 
 @Injectable()
@@ -30,7 +31,10 @@ export class AuthService {
     const isPasswordValid = await bcrypt.compare(authLoginDto.password, user.password);
     if (!isPasswordValid) throw new UnauthorizedException("Invalid credentials");
 
-    this.addTokensToResponse(response, this.generateTokens(user));
+    const tokens = this.generateTokens(user);
+    if (authLoginDto.cookies) this.addTokensToCookies(response, tokens);
+
+    return tokens;
   }
 
   async register(response: Response, authRegisterDto: AuthRegisterDto) {
@@ -39,17 +43,28 @@ export class AuthService {
 
     const user = await this.usersService.create({ ...authRegisterDto, role: Role.USER });
 
-    this.addTokensToResponse(response, this.generateTokens(user));
+    const tokens = this.generateTokens(user);
+    if (authRegisterDto.cookies) this.addTokensToCookies(response, tokens);
+
+    return tokens;
   }
 
-  async refresh(request: Request, response: Response) {
+  async refresh(request: Request, response: Response, authRefreshDto: AuthRefreshDto) {
     try {
-      const decoded: { userId: number } = jwt.verify(request.cookies.refresh_token ?? "", this.jwtRefreshSecret) as any;
+      let token = request.cookies.refresh_token ?? "";
+
+      if (authRefreshDto.refresh_token)
+        token = authRefreshDto.refresh_token;
+
+      const decoded: { userId: number } = jwt.verify(token, this.jwtRefreshSecret) as any;
 
       const user = await this.usersService.findOne(decoded.userId);
       if (!user) throw new UnauthorizedException("User not found");
 
-      this.addTokensToResponse(response, this.generateTokens(user));
+      const tokens = this.generateTokens(user);
+      if (authRefreshDto.cookies) this.addTokensToCookies(response, tokens);
+
+      return tokens;
     } catch (error) {
       throw new UnauthorizedException("Invalid refresh token");
     }
@@ -71,7 +86,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  private addTokensToResponse(response: Response, tokens: { accessToken?: string, refreshToken?: string }) {
+  private addTokensToCookies(response: Response, tokens: { accessToken?: string, refreshToken?: string }) {
     if (tokens.accessToken)
       response.cookie("access_token", tokens.accessToken, {
         httpOnly: true,
