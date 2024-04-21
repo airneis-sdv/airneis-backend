@@ -5,7 +5,8 @@ services:
       context: .
       target: production
     volumes:
-      - .:/usr/src/app
+      # - .:/usr/src/app
+      - ./uploads:/uploads/
     env_file:
     - .env
     # command: npm run start:dev
