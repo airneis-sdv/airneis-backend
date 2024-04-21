@@ -91,6 +91,7 @@ export class UsersService {
     user.addresses.push(address);
 
     await this.userRepository.save(user);
+    return address;
   }
 
   async findAllAddresses(userId: number) {
