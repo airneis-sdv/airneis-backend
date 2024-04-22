@@ -66,6 +66,7 @@ export class QueryProductFiltersDto {
   @ApiPropertyOptional()
   @IsInt()
   @Min(1)
+  @Max(50)
   @IsOptional()
   public limit: number = 10;
 }
