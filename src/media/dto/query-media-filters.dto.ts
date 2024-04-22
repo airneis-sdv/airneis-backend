@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsInt, IsOptional, IsString, Max, Min } from "class-validator";
 import { MediaFileType } from "../enums/media-file-type.enum";
 
 export class QueryMediaFiltersDto {
@@ -18,6 +18,8 @@ export class QueryMediaFiltersDto {
   @ApiProperty()
   @ApiPropertyOptional()
   @IsInt()
+  @Min(1)
+  @Max(50)
   @IsOptional()
   public limit: number = 10;
 
