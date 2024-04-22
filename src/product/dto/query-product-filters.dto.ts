@@ -1,10 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsNumber, IsOptional, IsString, Max, Min } from "class-validator";
+import { IsEnum, IsInt, IsNumber, IsOptional, IsString, Max, Min, MinLength } from "class-validator";
 
 export class QueryProductFiltersDto {
   @ApiProperty()
   @ApiPropertyOptional()
   @IsString()
+  @MinLength(3)
   @IsOptional()
   public search?: string;
 
