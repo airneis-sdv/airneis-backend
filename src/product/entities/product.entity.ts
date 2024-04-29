@@ -22,7 +22,6 @@ export class Product {
   public price: number;
 
   @Column()
-  @Exclude()
   public stock: number;
 
   @Column({ default: 0 })
