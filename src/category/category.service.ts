@@ -14,14 +14,10 @@ export class CategoryService {
   async create(createCategoryDto: CreateCategoryDto) {
     const category = this.categoryRepository.create(createCategoryDto);
 
-    if (createCategoryDto.thumbnailId !== undefined) {
-      const thumbnail = createCategoryDto.thumbnailId === null ? null : await this.mediaService.findOne(createCategoryDto.thumbnailId);
+    if (createCategoryDto.thumbnailId !== undefined)
+      category.thumbnail = createCategoryDto.thumbnailId === null ? null : await this.mediaService.findOne(createCategoryDto.thumbnailId);
 
-      delete createCategoryDto.thumbnailId;
-      category.thumbnail = thumbnail;
-    }
-
-    return this.categoryRepository.save(category);
+    return this.categoryRepository.save(this.categoryRepository.merge(category, createCategoryDto));
   }
 
   findAll() {
