@@ -90,6 +90,8 @@ export class ProductService {
 
   async update(id: number, updateProductDto: UpdateProductDto) {
     const product = await this.productRepository.findOne({ where: { id }, relations: { category: true, materials: true, images: true, backgroundImage: true } });
+    if (!product) throw new NotFoundException(`Product with id ${id} not found`);
+
     return this.createOrUpdateProduct(product, updateProductDto);
   }
 
