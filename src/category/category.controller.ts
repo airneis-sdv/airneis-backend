@@ -26,8 +26,6 @@ export class CategoryController {
   }
 
   @Get(":id")
-  @Authorize(Role.ADMIN)
-  @ApiCookieAuth()
   async findOne(@Param("id") id: string) {
     const category = await this.categoryService.findOne(+id);
     return { success: true, category };
