@@ -38,17 +38,13 @@ export class CategoryService {
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     const category = await this.categoryRepository.findOne({ where: { id }, relations: { thumbnail: true } });
 
-    if (updateCategoryDto.thumbnailId !== undefined) {
-      const thumbnail = updateCategoryDto.thumbnailId === null ? null : await this.mediaService.findOne(updateCategoryDto.thumbnailId);
+    if (updateCategoryDto.thumbnailId !== undefined)
+      category.thumbnail = updateCategoryDto.thumbnailId === null ? null : await this.mediaService.findOne(updateCategoryDto.thumbnailId);
 
-      delete updateCategoryDto.thumbnailId;
-      category.thumbnail = thumbnail;
-    }
-
-    const result = await this.categoryRepository.update(id, { ...updateCategoryDto, thumbnail: category.thumbnail });
+    const result = await this.categoryRepository.update(id, this.categoryRepository.merge(category, updateCategoryDto));
 
     if (result.affected !== 1)
-      throw new NotFoundException(`Category with id ${id} not found`);
+      throw new NotFoundException(`Failed to update category with id ${id}`);
   }
 
   async remove(id: number) {
