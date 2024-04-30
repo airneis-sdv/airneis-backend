@@ -32,7 +32,6 @@ export class MediaController {
       ],
     })
   ) file: Express.Multer.File) {
-    console.log(file)
     const media = await this.mediaService.create(file);
     return { success: true, media };
   }

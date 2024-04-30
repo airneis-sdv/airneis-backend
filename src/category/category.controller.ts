@@ -41,7 +41,6 @@ export class CategoryController {
   @Authorize(Role.ADMIN)
   @ApiCookieAuth()
   async update(@Param("id") id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    console.log(updateCategoryDto);
     await this.categoryService.update(+id, updateCategoryDto);
 
     const category = await this.categoryService.findOne(+id);
