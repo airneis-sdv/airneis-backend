@@ -2,18 +2,23 @@ import { BadRequestException, ConflictException, Injectable, InternalServerError
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { Like, Repository } from "typeorm";
+import { ProductService } from "../product/product.service";
+import { BasketDto } from "./dto/basket.dto";
 import { CreateUserAddressDto } from "./dto/create-user-address.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { PasswordUpdateDto } from "./dto/password-update.dto";
 import { UpdateUserAddressDto } from "./dto/update-user-address.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserAddress } from "./entities/user-address.entity";
+import { UserBasketItem } from "./entities/user-basket.entity";
 import { User } from "./entities/user.entity";
 
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(UserAddress) private addressRepository: Repository<UserAddress>) { }
+    @InjectRepository(UserAddress) private addressRepository: Repository<UserAddress>,
+    @InjectRepository(UserBasketItem) private basketRepository: Repository<UserBasketItem>,
+    private productService: ProductService) { }
 
   async create(createUserDto: CreateUserDto) {
     const userByEmail = await this.findOneByEmail(createUserDto.email);
@@ -134,5 +139,42 @@ export class UsersService {
     user.addresses = user.addresses.filter((address) => address.id !== addressId);
 
     await this.userRepository.save(user);
+  }
+
+  getBasketItems(userId: number) {
+    return this.basketRepository.find({
+      where: { user: { id: userId } },
+      relations: { product: { backgroundImage: true, category: { thumbnail: true }, images: true, materials: true } }
+    });
+  }
+
+  async addBasketItem(userId: number, basketDto: BasketDto) {
+    const user = await this.findOne(userId);
+    const product = await this.productService.findOne(basketDto.productId);
+
+    const existingItem = await this.basketRepository.count({ where: { user: { id: user.id }, product: { id: product.id } } });
+    if (existingItem)
+      throw new ConflictException(`Product with id ${basketDto.productId} is already in the basket`);
+
+    return this.basketRepository.save({ user, product, quantity: basketDto.quantity });
+  }
+
+  async updateBasketItem(userId: number, basketDto: BasketDto) {
+    const user = await this.findOne(userId);
+    const product = await this.productService.findOne(basketDto.productId);
+
+    return this.basketRepository.update({ user, product }, { quantity: basketDto.quantity });
+  }
+
+  async removeBasketItem(userId: number, productId: number) {
+    const user = await this.findOne(userId);
+    const product = await this.productService.findOne(productId);
+
+    return this.basketRepository.delete({ user, product });
+  }
+
+  async clearBasket(userId: number) {
+    const user = await this.findOne(userId);
+    return this.basketRepository.delete({ user });
   }
 }
