@@ -93,7 +93,7 @@ export class ProductService {
     return this.createOrUpdateProduct(product, updateProductDto);
   }
 
-  private async createOrUpdateProduct(product: Product | null, dto: CreateProductDto | UpdateProductDto) {
+  private async createOrUpdateProduct(product: Product, dto: CreateProductDto | UpdateProductDto) {
     if (dto.slug === undefined && dto instanceof CreateProductDto) {
       dto.slug = crypto.randomBytes(4).toString("hex") + "-" + dto.name.toLowerCase();
     }
