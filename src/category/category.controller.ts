@@ -31,6 +31,12 @@ export class CategoryController {
     return { success: true, category };
   }
 
+  @Get("slug/:slug")
+  async findBySlug(@Param("slug") slug: string) {
+    const category = await this.categoryService.findbySlug(slug);
+    return { success: true, category };
+  }
+
   @Patch(":id")
   @Authorize(Role.ADMIN)
   @ApiCookieAuth()

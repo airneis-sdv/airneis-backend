@@ -1,4 +1,4 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class CreateCategoryDto {
@@ -11,6 +11,13 @@ export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
   public description: string;
+
+  @ApiProperty()
+  @ApiPropertyOptional()
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  public slug?: string;
 
   @ApiProperty()
   @IsInt()

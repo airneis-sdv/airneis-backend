@@ -12,6 +12,9 @@ export class Category {
   @Column()
   public description: string;
 
+  @Column()
+  public slug: string;
+
   @CreateDateColumn()
   public createdAt: Date;
 
