@@ -1,7 +1,7 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from "@nestjs/common";
 import { ApiCookieAuth, ApiTags } from "@nestjs/swagger";
-import { Authorize } from "src/auth/decorators/authorize.decorator";
-import { Role } from "src/auth/enums/role.enum";
+import { Authorize } from "../auth/decorators/authorize.decorator";
+import { Role } from "../auth/enums/role.enum";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { QueryProductFiltersDto } from "./dto/query-product-filters.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";

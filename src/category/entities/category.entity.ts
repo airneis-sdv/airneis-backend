@@ -1,5 +1,5 @@
-import { Media } from "src/media/entities/media.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Media } from "../../media/entities/media.entity";
 
 @Entity()
 export class Category {

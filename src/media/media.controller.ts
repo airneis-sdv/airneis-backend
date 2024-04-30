@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, MaxFileSizeValidator, Param, ParseFilePipe, Patch, Post, Put, Query, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiCookieAuth, ApiTags } from "@nestjs/swagger";
-import { MultipleFileTypeValidator } from "src/common/validators/multiple-file-type.validator";
 import { Authorize } from "../auth/decorators/authorize.decorator";
 import { Role } from "../auth/enums/role.enum";
+import { MultipleFileTypeValidator } from "../common/validators/multiple-file-type.validator";
 import { QueryMediaFiltersDto } from "./dto/query-media-filters.dto";
 import { UpdateMediaDto } from "./dto/update-media.dto";
 import { Media } from "./entities/media.entity";

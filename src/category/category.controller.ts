@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { ApiCookieAuth, ApiTags } from "@nestjs/swagger";
-import { Authorize } from "src/auth/decorators/authorize.decorator";
-import { Role } from "src/auth/enums/role.enum";
+import { Authorize } from "../auth/decorators/authorize.decorator";
+import { Role } from "../auth/enums/role.enum";
 import { CategoryService } from "./category.service";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { UpdateCategoryDto } from "./dto/update-category.dto";

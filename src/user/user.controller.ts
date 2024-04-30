@@ -1,7 +1,7 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from "@nestjs/common";
 import { ApiCookieAuth, ApiTags } from "@nestjs/swagger";
-import { Authorize } from "src/auth/decorators/authorize.decorator";
-import { UserRequest } from "src/auth/decorators/user-request.decorator";
+import { Authorize } from "../auth/decorators/authorize.decorator";
+import { UserRequest } from "../auth/decorators/user-request.decorator";
 import { CreateUserAddressDto } from "./dto/create-user-address.dto";
 import { PasswordUpdateDto } from "./dto/password-update.dto";
 import { SelfUpdateUserDto } from "./dto/self-update-user.dto";

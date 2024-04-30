@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as crypto from "crypto";
-import { CategoryService } from "src/category/category.service";
-import { MaterialService } from "src/material/material.service";
-import { MediaService } from "src/media/media.service";
 import { Between, Equal, FindOptionsOrder, FindOptionsWhere, In, LessThanOrEqual, Like, MoreThanOrEqual, Repository } from "typeorm";
+import { CategoryService } from "../category/category.service";
+import { MaterialService } from "../material/material.service";
+import { MediaService } from "../media/media.service";
 import { CreateProductDto } from "./dto/create-product.dto";
 import { QueryProductFiltersDto } from "./dto/query-product-filters.dto";
 import { UpdateProductDto } from "./dto/update-product.dto";

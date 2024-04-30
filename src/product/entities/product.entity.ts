@@ -1,8 +1,7 @@
-import { Exclude } from "class-transformer";
-import { Category } from "src/category/entities/category.entity";
-import { Material } from "src/material/entities/material.entity";
-import { Media } from "src/media/entities/media.entity";
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Category } from "../../category/entities/category.entity";
+import { Material } from "../../material/entities/material.entity";
+import { Media } from "../../media/entities/media.entity";
 
 @Entity()
 export class Product {
