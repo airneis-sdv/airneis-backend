@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import * as crypto from "crypto";
+import { Utils } from "src/common/utils";
 import { Between, Equal, FindOptionsOrder, FindOptionsWhere, In, LessThanOrEqual, Like, MoreThanOrEqual, Repository } from "typeorm";
 import { CategoryService } from "../category/category.service";
 import { MaterialService } from "../material/material.service";
@@ -95,11 +95,11 @@ export class ProductService {
 
   private async createOrUpdateProduct(product: Product, dto: CreateProductDto | UpdateProductDto) {
     if (dto.slug === undefined && dto instanceof CreateProductDto) {
-      dto.slug = crypto.randomBytes(4).toString("hex") + "-" + dto.name.toLowerCase();
+      dto.slug = Utils.generateRandomString(4) + "-" + dto.name.toLowerCase();
     }
 
     if (dto.slug !== undefined) {
-      dto.slug = dto.slug.replace(/\W/g, '-');
+      dto.slug = Utils.slugify(dto.slug);
 
       const slugExists = await this.productRepository.findOne({ where: { slug: dto.slug } });
       if (slugExists && slugExists.id !== product?.id)
