@@ -101,8 +101,8 @@ export class ProductService {
     if (dto.slug !== undefined) {
       dto.slug = Utils.slugify(dto.slug);
 
-      const slugExists = await this.productRepository.findOne({ where: { slug: dto.slug } });
-      if (slugExists && slugExists.id !== product?.id)
+      const productBySlug = await this.productRepository.findOne({ where: { slug: dto.slug } });
+      if (productBySlug && productBySlug.id !== product?.id)
         throw new BadRequestException("Slug with the name \"" + dto.slug + "\" already exists");
     }
 
