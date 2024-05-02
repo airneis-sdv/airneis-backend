@@ -143,11 +143,12 @@ export class UsersService {
 
   async getBasketItems(userId: number) {
     const user = await this.findOne(userId);
-
-    return this.basketRepository.find({
+    const basket = await this.basketRepository.find({
       where: { user: { id: user.id } },
       relations: { product: { backgroundImage: true, category: { thumbnail: true }, images: true, materials: true } }
     });
+
+    return { basket, basketPrice: basket.reduce((total, item) => total + item.product.price * item.quantity, 0) };
   }
 
   async addBasketItem(userId: number, basketDto: BasketDto) {

@@ -92,7 +92,7 @@ export class UserController {
     await this.usersService.addBasketItem(user.id, basketDto);
     const basket = await this.usersService.getBasketItems(user.id);
 
-    return { success: true, basket };
+    return { success: true, ...basket };
   }
 
   @Get("basket")
@@ -100,7 +100,7 @@ export class UserController {
   @ApiCookieAuth()
   async findAllBasketItems(@UserRequest() user: User) {
     const basket = await this.usersService.getBasketItems(user.id);
-    return { success: true, basket };
+    return { success: true, ...basket };
   }
 
   @Patch("basket")
@@ -110,7 +110,7 @@ export class UserController {
     await this.usersService.updateBasketItem(user.id, basketDto);
     const basket = await this.usersService.getBasketItems(user.id);
 
-    return { success: true, basket };
+    return { success: true, ...basket };
   }
 
   @Delete("basket")
@@ -120,7 +120,7 @@ export class UserController {
     await this.usersService.removeBasketItem(user.id, deleteBasketDto.productId);
     const basket = await this.usersService.getBasketItems(user.id);
 
-    return { success: true, basket };
+    return { success: true, ...basket };
   }
 
   @Delete("basket/clear")

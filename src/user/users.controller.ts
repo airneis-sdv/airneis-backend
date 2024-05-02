@@ -112,7 +112,7 @@ export class UsersController {
     await this.usersService.addBasketItem(+userId, basketDto);
     const basket = await this.usersService.getBasketItems(+userId);
 
-    return { success: true, basket };
+    return { success: true, ...basket };
   }
 
   @Get(":userId/basket")
@@ -120,7 +120,7 @@ export class UsersController {
   @ApiCookieAuth()
   async findAllBasketItems(@Param("userId") userId: string) {
     const basket = await this.usersService.getBasketItems(+userId);
-    return { success: true, basket };
+    return { success: true, ...basket };
   }
 
   @Patch(":userId/basket")
@@ -130,7 +130,7 @@ export class UsersController {
     await this.usersService.updateBasketItem(+userId, basketDto);
     const basket = await this.usersService.getBasketItems(+userId);
 
-    return { success: true, basket };
+    return { success: true, ...basket };
   }
 
   @Delete(":userId/basket")
@@ -140,7 +140,7 @@ export class UsersController {
     await this.usersService.removeBasketItem(+userId, deleteBasketDto.productId);
     const basket = await this.usersService.getBasketItems(+userId);
 
-    return { success: true, basket };
+    return { success: true, ...basket };
   }
 
   @Delete(":userId/basket/clear")
