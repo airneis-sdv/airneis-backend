@@ -165,12 +165,18 @@ export class UsersService {
     const user = await this.findOne(userId);
     const product = await this.productService.findOne(basketDto.productId);
 
+    const existingItem = await this.basketRepository.count({ where: { user: { id: user.id }, product: { id: product.id } } });
+    if (!existingItem) throw new NotFoundException(`Product with id ${basketDto.productId} is not in the basket`);
+
     return this.basketRepository.update({ user, product }, { quantity: basketDto.quantity });
   }
 
   async removeBasketItem(userId: number, productId: number) {
     const user = await this.findOne(userId);
     const product = await this.productService.findOne(productId);
+
+    const existingItem = await this.basketRepository.count({ where: { user: { id: user.id }, product: { id: product.id } } });
+    if (!existingItem) throw new NotFoundException(`Product with id ${productId} is not in the basket`);
 
     return this.basketRepository.delete({ user, product });
   }
