@@ -2,8 +2,10 @@ import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch
 import { ApiCookieAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
 import { Authorize } from "../auth/decorators/authorize.decorator";
 import { Role } from "../auth/enums/role.enum";
+import { BasketDto } from "./dto/basket.dto";
 import { CreateUserAddressDto } from "./dto/create-user-address.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
+import { DeleteBasketDto } from "./dto/delete-basket.dto";
 import { UpdateUserAddressDto } from "./dto/update-user-address.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
@@ -100,6 +102,52 @@ export class UsersController {
   @ApiCookieAuth()
   async removeAddress(@Param("userId") userId: string, @Param("addressId") addressId: string) {
     await this.usersService.removeAddress(+userId, +addressId);
+    return { success: true };
+  }
+
+  @Post(":userId/basket")
+  @Authorize()
+  @ApiCookieAuth()
+  async createBasketItem(@Param("userId") userId: string, @Body() basketDto: BasketDto) {
+    await this.usersService.addBasketItem(+userId, basketDto);
+    const basket = await this.usersService.getBasketItems(+userId);
+
+    return { success: true, basket };
+  }
+
+  @Get(":userId/basket")
+  @Authorize()
+  @ApiCookieAuth()
+  async findAllBasketItems(@Param("userId") userId: string) {
+    const basket = await this.usersService.getBasketItems(+userId);
+    return { success: true, basket };
+  }
+
+  @Patch(":userId/basket")
+  @Authorize()
+  @ApiCookieAuth()
+  async updateBasketItem(@Param("userId") userId: string, @Body() basketDto: BasketDto) {
+    await this.usersService.updateBasketItem(+userId, basketDto);
+    const basket = await this.usersService.getBasketItems(+userId);
+
+    return { success: true, basket };
+  }
+
+  @Delete(":userId/basket")
+  @Authorize()
+  @ApiCookieAuth()
+  async removeBasketItem(@Param("userId") userId: string, @Body() deleteBasketDto: DeleteBasketDto) {
+    await this.usersService.removeBasketItem(+userId, deleteBasketDto.productId);
+    const basket = await this.usersService.getBasketItems(+userId);
+
+    return { success: true, basket };
+  }
+
+  @Delete(":userId/basket/clear")
+  @Authorize()
+  @ApiCookieAuth()
+  async removeAllBasketItems(@Param("userId") userId: string) {
+    await this.usersService.clearBasket(+userId);
     return { success: true };
   }
 }
