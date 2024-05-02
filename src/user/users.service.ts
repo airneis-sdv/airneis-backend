@@ -141,9 +141,11 @@ export class UsersService {
     await this.userRepository.save(user);
   }
 
-  getBasketItems(userId: number) {
+  async getBasketItems(userId: number) {
+    const user = await this.findOne(userId);
+
     return this.basketRepository.find({
-      where: { user: { id: userId } },
+      where: { user: { id: user.id } },
       relations: { product: { backgroundImage: true, category: { thumbnail: true }, images: true, materials: true } }
     });
   }
