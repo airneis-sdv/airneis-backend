@@ -12,6 +12,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserAddress } from "./entities/user-address.entity";
 import { UserBasketItem } from "./entities/user-basket.entity";
 import { User } from "./entities/user.entity";
+import { AddressType } from "./enums/address-type.enum";
 
 @Injectable()
 export class UsersService {
@@ -77,6 +78,8 @@ export class UsersService {
         const address = await this.addressRepository.findOne({ where: { id: dtoBillingAddress, user: { id: userId } } });
         if (!address) throw new NotFoundException(`Address with id ${dtoBillingAddress} not found for user with id ${userId}`);
 
+        if (address.type !== AddressType.BILLING) throw new BadRequestException(`Address with id ${dtoBillingAddress} is not a billing address`);
+
         user.defaultBillingAddress = address;
       }
     }
@@ -88,6 +91,8 @@ export class UsersService {
       if (dtoShippingAddress) {
         const address = await this.addressRepository.findOne({ where: { id: dtoShippingAddress, user: { id: userId } } });
         if (!address) throw new NotFoundException(`Address with id ${dtoShippingAddress} not found for user with id ${userId}`);
+
+        if (address.type !== AddressType.SHIPPING) throw new BadRequestException(`Address with id ${dtoShippingAddress} is not a shipping address`);
 
         user.defaultShippingAddress = address;
       }
