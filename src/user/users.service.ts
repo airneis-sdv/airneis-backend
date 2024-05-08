@@ -47,7 +47,7 @@ export class UsersService {
   }
 
   async findOne(userId: number) {
-    const user = await this.userRepository.findOne({ where: { id: userId } });
+    const user = await this.userRepository.findOne({ where: { id: userId }, relations: { defaultBillingAddress: true, defaultShippingAddress: true } });
     if (!user) throw new NotFoundException(`User with id ${userId} not found`);
 
     return user;
@@ -58,10 +58,42 @@ export class UsersService {
   }
 
   async update(userId: number, updateUserDto: UpdateUserDto) {
-    const result = await this.userRepository.update(userId, updateUserDto);
+    const user = await this.findOne(userId);
 
-    if (result.affected !== 1)
-      throw new NotFoundException(`User with id ${userId} not found`);
+    if (updateUserDto.email) {
+      if (updateUserDto.email.toLowerCase() === user.email.toLowerCase())
+        throw new BadRequestException("New email must be different from the current email");
+
+      const userByEmail = await this.findOneByEmail(updateUserDto.email);
+      if (userByEmail)
+        throw new ConflictException(`Email ${updateUserDto.email} is already in use by another user`);
+    }
+
+    const dtoBillingAddress = updateUserDto.defaultBillingAddressId;
+    if (dtoBillingAddress !== undefined) {
+      user.defaultBillingAddress = null;
+
+      if (dtoBillingAddress) {
+        const address = await this.addressRepository.findOne({ where: { id: dtoBillingAddress, user: { id: userId } } });
+        if (!address) throw new NotFoundException(`Address with id ${dtoBillingAddress} not found for user with id ${userId}`);
+
+        user.defaultBillingAddress = address;
+      }
+    }
+
+    const dtoShippingAddress = updateUserDto.defaultShippingAddressId;
+    if (dtoShippingAddress !== undefined) {
+      user.defaultShippingAddress = null;
+
+      if (dtoShippingAddress) {
+        const address = await this.addressRepository.findOne({ where: { id: dtoShippingAddress, user: { id: userId } } });
+        if (!address) throw new NotFoundException(`Address with id ${dtoShippingAddress} not found for user with id ${userId}`);
+
+        user.defaultShippingAddress = address;
+      }
+    }
+
+    return await this.userRepository.save(this.userRepository.merge(user, updateUserDto));
   }
 
   async updatePassword(userId: number, passwordUpdateDto: PasswordUpdateDto) {

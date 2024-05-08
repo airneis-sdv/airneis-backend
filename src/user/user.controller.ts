@@ -29,9 +29,7 @@ export class UserController {
   @Authorize()
   @ApiCookieAuth()
   async update(@UserRequest() user: User, @Body() selfUpdateUserDto: SelfUpdateUserDto) {
-    await this.usersService.update(user.id, selfUpdateUserDto);
-
-    const updatedUser = await this.usersService.findOne(user.id);
+    const updatedUser = await this.usersService.update(user.id, selfUpdateUserDto);
     return { success: true, user: updatedUser };
   }
 

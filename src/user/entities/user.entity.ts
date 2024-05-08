@@ -1,5 +1,5 @@
 import { Exclude } from "class-transformer";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Role } from "../../auth/enums/role.enum";
 import { UserAddress } from "./user-address.entity";
 import { UserBasketItem } from "./user-basket.entity";
@@ -31,6 +31,12 @@ export class User {
 
   @OneToMany(() => UserBasketItem, (basketItem) => basketItem.user, { cascade: true })
   public basket: UserBasketItem[];
+
+  @ManyToOne(() => UserAddress, { nullable: true, cascade: true, onDelete: "SET NULL" })
+  public defaultBillingAddress: UserAddress;
+
+  @ManyToOne(() => UserAddress, { nullable: true, cascade: true, onDelete: "SET NULL" })
+  public defaultShippingAddress: UserAddress;
 
   @CreateDateColumn()
   public createdAt: Date;

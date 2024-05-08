@@ -49,9 +49,7 @@ export class UsersController {
   @Authorize(Role.ADMIN)
   @ApiCookieAuth()
   async update(@Param("id") id: string, @Body() updateUserDto: UpdateUserDto) {
-    await this.usersService.update(+id, updateUserDto);
-
-    const user = await this.usersService.findOne(+id);
+    const user = await this.usersService.update(+id, updateUserDto);
     return { success: true, user };
   }
 
