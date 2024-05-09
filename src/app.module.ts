@@ -7,6 +7,7 @@ import { ResponseExceptionFilter } from "./common/filters/response-exception.fil
 import { DatabaseModule } from "./config/database.module";
 import { MaterialModule } from "./material/material.module";
 import { MediaModule } from "./media/media.module";
+import { OrderModule } from "./order/order.module";
 import { ProductModule } from "./product/product.module";
 import { UserModule } from "./user/user.module";
 
@@ -20,6 +21,7 @@ import { UserModule } from "./user/user.module";
     MaterialModule,
     CategoryModule,
     ProductModule,
+    OrderModule,
   ],
   controllers: [],
   providers: [

@@ -1,5 +1,8 @@
-import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from "@nestjs/common";
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from "@nestjs/common";
 import { ApiCookieAuth, ApiTags } from "@nestjs/swagger";
+import { CreateOrderDto } from "src/order/dto/create-order.dto";
+import { QueryOrderFilters } from "src/order/dto/query-order-filters";
+import { OrderService } from "src/order/order.service";
 import { Authorize } from "../auth/decorators/authorize.decorator";
 import { UserRequest } from "../auth/decorators/user-request.decorator";
 import { BasketDto } from "./dto/basket.dto";
@@ -15,7 +18,8 @@ import { UsersService } from "./users.service";
 @ApiTags("user")
 @Controller("user")
 export class UserController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService,
+    private readonly orderService: OrderService) { }
 
   @Get()
   @Authorize()
@@ -127,5 +131,38 @@ export class UserController {
   async removeAllBasketItems(@UserRequest() user: User) {
     await this.usersService.clearBasket(user.id);
     return { success: true };
+  }
+
+  @Get("orders")
+  @Authorize()
+  @ApiCookieAuth()
+  async findAllOrders(@UserRequest() user: User, @Query() query: QueryOrderFilters) {
+    query.user = user.id;
+
+    const results = await this.orderService.findAll(query);
+    return { success: true, ...results };
+  }
+
+  @Post("orders")
+  @Authorize()
+  @ApiCookieAuth()
+  public create(@UserRequest() user: User, @Body() createOrderDto: CreateOrderDto) {
+    return this.orderService.createUserOrder(user.id, createOrderDto);
+  }
+
+  @Get("orders/:id")
+  @Authorize()
+  @ApiCookieAuth()
+  async findOneOrder(@UserRequest() user: User, @Param("id") id: string) {
+    const order = await this.orderService.findOne(+id, user.id);
+    return { success: true, order };
+  }
+
+  @Post("orders/:id/cancel")
+  @Authorize()
+  @ApiCookieAuth()
+  async cancelOrder(@UserRequest() user: User, @Param("id") id: string) {
+    const order = await this.orderService.cancelOrder(+id, user.id);
+    return { success: true, order };
   }
 }
