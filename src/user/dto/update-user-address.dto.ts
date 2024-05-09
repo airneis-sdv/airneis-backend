@@ -6,6 +6,11 @@ export class UpdateUserAddressDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
+  public label?: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
   public firstName?: string;
 
   @ApiProperty()

@@ -5,6 +5,11 @@ import { AddressType } from "../enums/address-type.enum";
 export class CreateUserAddressDto {
   @ApiProperty()
   @IsString()
+  @IsOptional()
+  public label?: string;
+
+  @ApiProperty()
+  @IsString()
   @IsNotEmpty()
   public firstName: string;
 

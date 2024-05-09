@@ -7,6 +7,9 @@ export class UserAddress {
   @PrimaryGeneratedColumn()
   public id: number;
 
+  @Column({ nullable: true })
+  public label?: string;
+
   @Column()
   public firstName: string;
 
