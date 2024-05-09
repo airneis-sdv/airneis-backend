@@ -3,6 +3,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGenerate
 import { Role } from "../../auth/enums/role.enum";
 import { UserAddress } from "./user-address.entity";
 import { UserBasketItem } from "./user-basket.entity";
+import { UserPaymentMethod } from "./user-payment-method.entity";
 
 @Entity()
 export class User {
@@ -28,6 +29,9 @@ export class User {
 
   @OneToMany(() => UserAddress, (address) => address.user, { cascade: true })
   public addresses: UserAddress[];
+
+  @OneToMany(() => UserPaymentMethod, (paymentMethod) => paymentMethod.user, { cascade: true })
+  public paymentMethods: UserPaymentMethod[];
 
   @OneToMany(() => UserBasketItem, (basketItem) => basketItem.user, { cascade: true })
   public basket: UserBasketItem[];

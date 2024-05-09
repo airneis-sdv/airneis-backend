@@ -7,6 +7,7 @@ import { Authorize } from "../auth/decorators/authorize.decorator";
 import { UserRequest } from "../auth/decorators/user-request.decorator";
 import { BasketDto } from "./dto/basket.dto";
 import { CreateUserAddressDto } from "./dto/create-user-address.dto";
+import { UserPaymentMethodDto } from "./dto/user-payment-method.dto";
 import { DeleteBasketDto } from "./dto/delete-basket.dto";
 import { PasswordUpdateDto } from "./dto/password-update.dto";
 import { SelfUpdateUserDto } from "./dto/self-update-user.dto";
@@ -164,5 +165,45 @@ export class UserController {
   async cancelOrder(@UserRequest() user: User, @Param("id") id: string) {
     const order = await this.orderService.cancelOrder(+id, user.id);
     return { success: true, order };
+  }
+
+  @Post("payment-methods")
+  @Authorize()
+  @ApiCookieAuth()
+  async createPaymentMethod(@UserRequest() user: User, @Body() createPaymentMethodDto: UserPaymentMethodDto) {
+    const paymentMethod = await this.usersService.createPaymentMethod(user.id, createPaymentMethodDto);
+    return { success: true, paymentMethod };
+  }
+
+  @Get("payment-methods")
+  @Authorize()
+  @ApiCookieAuth()
+  async findAllPaymentMethods(@UserRequest() user: User) {
+    const paymentMethods = await this.usersService.findAllPaymentMethods(user.id);
+    return { success: true, paymentMethods };
+  }
+
+  @Get("payment-methods/:id")
+  @Authorize()
+  @ApiCookieAuth()
+  async findPaymentMethod(@UserRequest() user: User, @Param("id") id: string) {
+    const paymentMethod = await this.usersService.findOnePaymentMethod(user.id, +id);
+    return { success: true, paymentMethod };
+  }
+
+  @Patch("payment-methods/:id")
+  @Authorize()
+  @ApiCookieAuth()
+  async updatePaymentMethod(@UserRequest() user: User, @Param("id") id: string, @Body() updatePaymentMethodDto: UserPaymentMethodDto) {
+    const paymentMethod = await this.usersService.updatePaymentMethod(user.id, +id, updatePaymentMethodDto);
+    return { success: true, paymentMethod };
+  }
+
+  @Delete("payment-methods/:id")
+  @Authorize()
+  @ApiCookieAuth()
+  async removePaymentMethod(@UserRequest() user: User, @Param("id") id: string) {
+    await this.usersService.removePaymentMethod(user.id, +id);
+    return { success: true };
   }
 }

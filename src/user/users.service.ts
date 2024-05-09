@@ -9,8 +9,10 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { PasswordUpdateDto } from "./dto/password-update.dto";
 import { UpdateUserAddressDto } from "./dto/update-user-address.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { UserPaymentMethodDto } from "./dto/user-payment-method.dto";
 import { UserAddress } from "./entities/user-address.entity";
 import { UserBasketItem } from "./entities/user-basket.entity";
+import { UserPaymentMethod } from "./entities/user-payment-method.entity";
 import { User } from "./entities/user.entity";
 import { AddressType } from "./enums/address-type.enum";
 
@@ -19,6 +21,7 @@ export class UsersService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(UserAddress) private addressRepository: Repository<UserAddress>,
     @InjectRepository(UserBasketItem) private basketRepository: Repository<UserBasketItem>,
+    @InjectRepository(UserPaymentMethod) private paymentMethodRepository: Repository<UserPaymentMethod>,
     private productService: ProductService) { }
 
   async create(createUserDto: CreateUserDto) {
@@ -222,5 +225,57 @@ export class UsersService {
   async clearBasket(userId: number) {
     const user = await this.findOne(userId);
     return this.basketRepository.delete({ user });
+  }
+
+  async createPaymentMethod(userId: number, createPaymentMethodDto: UserPaymentMethodDto) {
+    const user = await this.findOne(userId);
+    let paymentMethod = this.paymentMethodRepository.create(createPaymentMethodDto);
+    paymentMethod.user = user;
+
+    paymentMethod = await this.paymentMethodRepository.save(paymentMethod);
+    return this.paymentMethodAddLastDigits(paymentMethod);
+  }
+
+  async findAllPaymentMethods(userId: number) {
+    const user = await this.findOne(userId);
+    const paymentMethods = await this.paymentMethodRepository.find({ where: { user: { id: user.id } } });
+
+    return this.paymentMethodAddLastDigits(paymentMethods);
+  }
+
+  async findOnePaymentMethod(userId: number, paymentMethodId: number) {
+    const user = await this.findOne(userId);
+
+    const paymentMethod = await this.paymentMethodRepository.findOne({ where: { id: paymentMethodId, user: { id: user.id } } });
+    if (!paymentMethod) throw new NotFoundException(`Payment method with id ${paymentMethodId} not found for user with id ${userId}`);
+
+    return this.paymentMethodAddLastDigits(paymentMethod);
+  }
+
+  async updatePaymentMethod(userId: number, paymentMethodId: number, updatePaymentMethodDto: UserPaymentMethodDto) {
+    let paymentMethod = await this.findOnePaymentMethod(userId, paymentMethodId);
+    paymentMethod = await this.paymentMethodRepository.save(this.paymentMethodRepository.merge(paymentMethod as UserPaymentMethod, updatePaymentMethodDto));
+
+    return this.paymentMethodAddLastDigits(paymentMethod);
+  }
+
+  async removePaymentMethod(userId: number, paymentMethodId: number) {
+    const paymentMethod = await this.findOnePaymentMethod(userId, paymentMethodId) as UserPaymentMethod;
+    const result = await this.paymentMethodRepository.delete({ id: paymentMethod.id });
+
+    if (result.affected !== 1)
+      throw new InternalServerErrorException(`Failed to remove payment method with id ${paymentMethodId} for user with id ${userId}`);
+  }
+
+  private paymentMethodAddLastDigits(paymentMethod: UserPaymentMethod | UserPaymentMethod[]) {
+    if (Array.isArray(paymentMethod)) {
+      return paymentMethod.map((method: any) => {
+        method.lastDigits = method.cardNumber.slice(-4);
+        return method;
+      });
+    }
+
+    (paymentMethod as any).lastDigits = paymentMethod.cardNumber.slice(-4);
+    return paymentMethod;
   }
 }
