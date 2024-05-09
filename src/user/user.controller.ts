@@ -125,7 +125,7 @@ export class UserController {
     return { success: true, ...basket };
   }
 
-  @Delete("basket/clear")
+  @Post("basket/clear")
   @Authorize()
   @ApiCookieAuth()
   async removeAllBasketItems(@UserRequest() user: User) {
