@@ -90,7 +90,7 @@ export class OrderService {
       relations: { products: true, billingAddress: true, shippingAddress: true, user: true },
     });
 
-    return { orders: result, limit: filters.limit, page: filters.page ?? 1, total: totalPages }
+    return { orders: result, limit: filters.limit, page: filters.page ?? 1, orderCount, totalPages }
   }
 
   async findOne(orderId: number, userId?: number) {

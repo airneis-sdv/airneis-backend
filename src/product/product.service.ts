@@ -71,7 +71,7 @@ export class ProductService {
       relations: { category: true, materials: true, images: true, backgroundImage: true },
     });
 
-    return { products: result, limit: filters.limit, page: filters.page ?? 1, total: totalPages };
+    return { products: result, limit: filters.limit, page: filters.page ?? 1, productCount, totalPages };
   }
 
   async findOne(id: number) {
