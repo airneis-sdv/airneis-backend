@@ -33,7 +33,7 @@ export class ProductService {
       where.category = In(filters.categories.split(",").map(Number));
 
     if (filters.materials)
-      where.materials = In(filters.materials.split(",").map(Number));
+      where.materials = { id: In(filters.materials.split(",").map(Number)) }
 
     if (filters.minPrice && filters.maxPrice) {
       if (filters.minPrice > filters.maxPrice)
@@ -54,7 +54,7 @@ export class ProductService {
     if (filters.sort && filters.order)
       order[filters.sort] = { direction: filters.order };
 
-    const productCount = await this.productRepository.count({ where });
+    const productCount = await this.productRepository.count({ where, relations: { materials: true } });
     const totalPages = Math.ceil(productCount / filters.limit);
 
     if (filters.limit < 1 || filters.limit > 20)
