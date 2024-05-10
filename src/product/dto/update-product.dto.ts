@@ -51,6 +51,7 @@ export class UpdateProductDto {
   public categoryId?: number;
 
   @ApiProperty()
+  @IsArray()
   @IsInt({ each: true })
   @IsNotEmpty()
   @IsOptional()
