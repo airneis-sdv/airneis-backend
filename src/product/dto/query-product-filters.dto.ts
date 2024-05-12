@@ -23,14 +23,14 @@ export class QueryProductFiltersDto {
 
   @ApiProperty()
   @ApiPropertyOptional()
-  @IsInt()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   @IsOptional()
   public minPrice?: number;
 
   @ApiProperty()
   @ApiPropertyOptional()
-  @IsInt()
+  @IsNumber({ maxDecimalPlaces: 2 })
   @Min(0)
   @IsOptional()
   public maxPrice?: number;
