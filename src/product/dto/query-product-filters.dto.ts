@@ -45,7 +45,7 @@ export class QueryProductFiltersDto {
 
   @ApiProperty()
   @ApiPropertyOptional()
-  @IsEnum({ priority: "priority", price: "price", createdAt: "createdAt" })
+  @IsEnum({ id: "id", name: "name", priority: "priority", price: "price", category: "category", stock: "stock", createdAt: "createdAt" })
   @IsOptional()
   public sort?: string;
 
