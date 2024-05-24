@@ -45,8 +45,8 @@ export class MediaService {
     const mediaCount = await this.mediaRepository.count({ where });
     const totalPages = Math.ceil(mediaCount / filters.limit);
 
-    if (filters.limit < 1 || filters.limit > 20)
-      throw new BadRequestException("Limit must be between 1 and 20");
+    if (filters.limit < 1 || filters.limit > 50)
+      throw new BadRequestException("Limit must be between 1 and 50");
 
     if (filters.page && (filters.page < 1 || filters.page > totalPages))
       throw new BadRequestException("Page is out of bounds, max page is " + totalPages);
