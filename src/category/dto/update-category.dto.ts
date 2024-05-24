@@ -10,7 +10,6 @@ export class UpdateCategoryDto {
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   public description?: string;
 

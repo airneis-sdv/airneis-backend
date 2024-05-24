@@ -9,7 +9,7 @@ export class Category {
   @Column()
   public name: string;
 
-  @Column()
+  @Column({ default: "" })
   public description: string;
 
   @Column()

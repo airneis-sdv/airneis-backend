@@ -9,8 +9,8 @@ export class CreateCategoryDto {
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
-  public description: string;
+  @IsOptional()
+  public description?: string;
 
   @ApiProperty()
   @ApiPropertyOptional()
