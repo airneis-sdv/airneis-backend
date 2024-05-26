@@ -17,6 +17,7 @@ export class CreateCategoryDto {
   @ApiProperty()
   @ApiPropertyOptional()
   @IsString()
+  @MaxLength(100)
   @IsNotEmpty()
   @IsOptional()
   public slug?: string;

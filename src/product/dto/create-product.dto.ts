@@ -18,6 +18,7 @@ export class CreateProductDto {
   @ApiProperty()
   @ApiPropertyOptional()
   @IsString()
+  @MaxLength(100)
   @IsNotEmpty()
   @IsOptional()
   public slug?: string;
