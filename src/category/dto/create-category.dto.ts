@@ -4,6 +4,7 @@ import { IsInt, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-valida
 export class CreateCategoryDto {
   @ApiProperty()
   @IsString()
+  @MaxLength(100)
   @IsNotEmpty()
   public name: string;
 

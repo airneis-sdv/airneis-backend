@@ -4,6 +4,7 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from "class-val
 export class UpdateCategoryDto {
   @ApiProperty()
   @IsString()
+  @MaxLength(100)
   @IsNotEmpty()
   @IsOptional()
   public name?: string;

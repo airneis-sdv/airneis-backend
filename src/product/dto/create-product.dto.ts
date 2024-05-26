@@ -4,6 +4,7 @@ import { IsArray, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, 
 export class CreateProductDto {
   @ApiProperty()
   @IsString()
+  @MaxLength(100)
   @IsNotEmpty()
   public name: string;
 

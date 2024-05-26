@@ -5,6 +5,7 @@ export class UpdateProductDto {
   @ApiProperty()
   @ApiPropertyOptional()
   @IsString()
+  @MaxLength(100)
   @IsNotEmpty()
   @IsOptional()
   public name?: string;
