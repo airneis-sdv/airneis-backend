@@ -11,8 +11,8 @@ export class Product {
   @Column()
   public name: string;
 
-  @Column({ nullable: true })
-  public description?: string;
+  @Column({ default: "", type: "text" })
+  public description: string;
 
   @Column()
   public slug: string;
