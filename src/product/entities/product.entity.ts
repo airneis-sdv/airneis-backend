@@ -32,7 +32,7 @@ export class Product {
   @UpdateDateColumn()
   public updatedAt: Date;
 
-  @ManyToOne(() => Category, { nullable: true })
+  @ManyToOne(() => Category, { nullable: true, cascade: true, onDelete: "SET NULL" })
   public category?: Category;
 
   @ManyToMany(() => Material)
