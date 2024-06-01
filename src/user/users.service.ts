@@ -1,12 +1,13 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
-import { Like, Repository } from "typeorm";
+import { FindOptionsWhere, Like, Repository } from "typeorm";
 import { ProductService } from "../product/product.service";
 import { BasketDto } from "./dto/basket.dto";
 import { CreateUserAddressDto } from "./dto/create-user-address.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { PasswordUpdateDto } from "./dto/password-update.dto";
+import { QueryUserFiltersDto } from "./dto/query-user-filters.dto";
 import { UpdateUserAddressDto } from "./dto/update-user-address.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UserPaymentMethodDto } from "./dto/user-payment-method.dto";
@@ -34,20 +35,22 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  findAll() {
-    return this.userRepository.find();
-  }
+  async findAll(filters: QueryUserFiltersDto) {
+    const where: FindOptionsWhere<User> = {};
+    if (filters.search)
+      where.name = Like(`%${filters.search}%`);
 
-  findAllBySearch(search: string) {
-    if (search.length < 3)
-      throw new BadRequestException("Search query must be at least 3 characters long");
+    const userCount = await this.userRepository.count({ where });
+    const totalPages = Math.ceil(userCount / filters.limit);
 
-    return this.userRepository.find({
-      where: [
-        { name: Like(`%${search}%`) },
-        { email: Like(`%${search}%`) },
-      ],
-    });
+    if (filters.limit < 1 || filters.limit > 50)
+      throw new BadRequestException("Limit must be between 1 and 50");
+
+    if (filters.page && (filters.page < 1 || filters.page > totalPages))
+      throw new BadRequestException("Page is out of bounds, max page is " + totalPages);
+
+    const result = await this.userRepository.find({ where, take: filters.limit, skip: filters.page ? filters.limit * (filters.page - 1) : 0 });
+    return { users: result, limit: filters.limit, page: filters.page ?? 1, userCount, totalPages };
   }
 
   async findOne(userId: number) {

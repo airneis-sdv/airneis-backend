@@ -1,5 +1,6 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, Query, UseInterceptors } from "@nestjs/common";
-import { ApiCookieAuth, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ApiCookieAuth, ApiTags } from "@nestjs/swagger";
+import { QueryMediaFiltersDto } from "src/media/dto/query-media-filters.dto";
 import { Authorize } from "../auth/decorators/authorize.decorator";
 import { Role } from "../auth/enums/role.enum";
 import { BasketDto } from "./dto/basket.dto";
@@ -28,13 +29,9 @@ export class UsersController {
   @Get()
   @Authorize(Role.ADMIN)
   @ApiCookieAuth()
-  @ApiQuery({ name: "search", required: false })
-  async findAll(@Query() query: { search?: string }) {
-    const users = query.search
-      ? await this.usersService.findAllBySearch(query.search)
-      : await this.usersService.findAll();
-
-    return { success: true, users };
+  async findAll(@Query() filters: QueryMediaFiltersDto) {
+    const results = await this.usersService.findAll(filters);
+    return { success: true, ...results };
   }
 
   @Get(":id")
