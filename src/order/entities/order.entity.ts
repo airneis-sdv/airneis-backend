@@ -9,7 +9,7 @@ export class Order {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { cascade: true, onDelete: "SET NULL" })
   public user: User;
 
   @CreateDateColumn()
