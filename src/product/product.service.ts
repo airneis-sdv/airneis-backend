@@ -51,6 +51,9 @@ export class ProductService {
     if (filters.stock !== undefined)
       where.stock = filters.stock === 1 ? MoreThanOrEqual(1) : Equal(0);
 
+    if (filters.featured !== undefined)
+      where.isFeatured = filters.featured === 1 ? Equal(true) : Equal(false);
+
     if (filters.sort && filters.order)
       order[filters.sort] = { direction: filters.order };
 

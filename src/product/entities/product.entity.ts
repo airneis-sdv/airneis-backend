@@ -26,6 +26,9 @@ export class Product {
   @Column({ default: 0 })
   public priority: number = 0;
 
+  @Column({ default: false })
+  public isFeatured: boolean = false;
+
   @CreateDateColumn()
   public createdAt: Date;
 

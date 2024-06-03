@@ -45,6 +45,14 @@ export class QueryProductFiltersDto {
 
   @ApiProperty()
   @ApiPropertyOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(1)
+  @IsOptional()
+  public featured?: number;
+
+  @ApiProperty()
+  @ApiPropertyOptional()
   @IsEnum({ id: "id", name: "name", priority: "priority", price: "price", category: "category", stock: "stock", createdAt: "createdAt" })
   @IsOptional()
   public sort?: string;
